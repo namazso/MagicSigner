@@ -8,14 +8,18 @@ Just place XmlLite.dll next to signtool.exe
 
 ## Demo
 
-** Before MagicSigner **
+**Before MagicSigner**
 
 ![image](https://github.com/namazso/MagicSigner/assets/8676443/7469f4ee-8f8f-4eda-b703-407e8fe6176b)
 
-** After MagicSigner **
+**After MagicSigner**
 
 ![image](https://github.com/namazso/MagicSigner/assets/8676443/2b6fa4ca-611e-46b2-9917-bf91927d80a3)
 ![image](https://github.com/namazso/MagicSigner/assets/8676443/b9f28609-6e22-4ab7-a885-142fa526d02e)
+
+## Alternative solutions
+
+You can also just set the clock on your computer back. However that needs admin privileges, and has the tendency to break other apps, because it invalidates all the certificates TLS connections (like HTTPS) uses for the time.
 
 ## License
 
