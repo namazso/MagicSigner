@@ -13,19 +13,44 @@
 
 #include <Windows.h>
 
-#include <strsafe.h>
-
 #include <cstdint>
 
-using fnCreateXmlWriter = HRESULT(WINAPI*)(REFIID, void**, IMalloc*);
+HINSTANCE get_original_dll() {
+  static HINSTANCE p{};
+  if (!p)
+    p = LoadLibraryExA("XmlLite.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+  return p;
+}
 
+template <typename Fn>
+Fn get_original(const char* name) {
+  return (Fn)GetProcAddress(get_original_dll(), name);
+}
+
+using fnCreateXmlReader = HRESULT(WINAPI*)(REFIID riid, void** ppvObject, IMalloc* pMalloc);
+using fnCreateXmlReaderInputWithEncodingCodePage = HRESULT(WINAPI*)(IUnknown* pInputStream, IMalloc* pMalloc, UINT nEncodingCodePage, BOOL fEncodingHint, LPCWSTR pwszBaseUri, struct IXmlReaderInput** ppInput);
+using fnCreateXmlReaderInputWithEncodingName = HRESULT(WINAPI*)(IUnknown* pInputStream, IMalloc* pMalloc, LPCWSTR pwszEncodingName, BOOL fEncodingHint, LPCWSTR pwszBaseUri, struct IXmlReaderInput** ppInput);
+using fnCreateXmlWriter = HRESULT(WINAPI*)(REFIID riid, void** ppvObject, IMalloc* pMalloc);
+using fnCreateXmlWriterOutputWithEncodingCodePage = HRESULT(WINAPI*)(IUnknown* pOutputStream, IMalloc* pMalloc, UINT nEncodingCodePage, struct IXmlWriterOutput** ppOutput);
+using fnCreateXmlWriterOutputWithEncodingName = HRESULT(WINAPI*)(IUnknown* pOutputStream, IMalloc* pMalloc, LPCWSTR pwszEncodingName, struct IXmlWriterOutput** ppOutput);
+
+EXTERN_C __declspec(dllexport) HRESULT STDAPICALLTYPE CreateXmlReader(REFIID riid, void** ppvObject, IMalloc* pMalloc) {
+  return get_original<fnCreateXmlReader>("CreateXmlReader")(riid, ppvObject, pMalloc);
+}
+EXTERN_C __declspec(dllexport) HRESULT STDAPICALLTYPE CreateXmlReaderInputWithEncodingCodePage(IUnknown* pInputStream, IMalloc* pMalloc, UINT nEncodingCodePage, BOOL fEncodingHint, LPCWSTR pwszBaseUri, struct IXmlReaderInput** ppInput) {
+  return get_original<fnCreateXmlReaderInputWithEncodingCodePage>("CreateXmlReaderInputWithEncodingCodePage")(pInputStream, pMalloc, nEncodingCodePage, fEncodingHint, pwszBaseUri, ppInput);
+}
+EXTERN_C __declspec(dllexport) HRESULT STDAPICALLTYPE CreateXmlReaderInputWithEncodingName(IUnknown* pInputStream, IMalloc* pMalloc, LPCWSTR pwszEncodingName, BOOL fEncodingHint, LPCWSTR pwszBaseUri, struct IXmlReaderInput** ppInput) {
+  return get_original<fnCreateXmlReaderInputWithEncodingName>("CreateXmlReaderInputWithEncodingName")(pInputStream, pMalloc, pwszEncodingName, fEncodingHint, pwszBaseUri, ppInput);
+}
 EXTERN_C __declspec(dllexport) HRESULT STDAPICALLTYPE CreateXmlWriter(REFIID riid, void** ppvObject, IMalloc* pMalloc) {
-  static fnCreateXmlWriter p{};
-  if (!p) {
-    const auto lib = LoadLibraryExA("XmlLite.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
-    p = (fnCreateXmlWriter)GetProcAddress(lib, "CreateXmlWriter");
-  }
-  return p(riid, ppvObject, pMalloc);
+  return get_original<fnCreateXmlWriter>("CreateXmlWriter")(riid, ppvObject, pMalloc);
+}
+EXTERN_C __declspec(dllexport) HRESULT STDAPICALLTYPE CreateXmlWriterOutputWithEncodingCodePage(IUnknown* pOutputStream, IMalloc* pMalloc, UINT nEncodingCodePage, struct IXmlWriterOutput** ppOutput) {
+  return get_original<fnCreateXmlWriterOutputWithEncodingCodePage>("CreateXmlWriterOutputWithEncodingCodePage")(pOutputStream, pMalloc, nEncodingCodePage, ppOutput);
+}
+EXTERN_C __declspec(dllexport) HRESULT STDAPICALLTYPE CreateXmlWriterOutputWithEncodingName(IUnknown* pOutputStream, IMalloc* pMalloc, LPCWSTR pwszEncodingName, struct IXmlWriterOutput** ppOutput) {
+  return get_original<fnCreateXmlWriterOutputWithEncodingName>("CreateXmlWriterOutputWithEncodingName")(pOutputStream, pMalloc, pwszEncodingName, ppOutput);
 }
 
 void* follow_jumps(void* p) {
