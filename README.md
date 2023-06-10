@@ -4,7 +4,18 @@ Patcher dll for signtool that allows signing with expired certificates
 
 ## Usage
 
-Just place next to signtool.exe
+Just place XmlLite.dll next to signtool.exe
+
+## Demo
+
+** Before MagicSigner **
+
+![image](https://github.com/namazso/MagicSigner/assets/8676443/7469f4ee-8f8f-4eda-b703-407e8fe6176b)
+
+** After MagicSigner **
+
+![image](https://github.com/namazso/MagicSigner/assets/8676443/2b6fa4ca-611e-46b2-9917-bf91927d80a3)
+![image](https://github.com/namazso/MagicSigner/assets/8676443/b9f28609-6e22-4ab7-a885-142fa526d02e)
 
 ## License
 
