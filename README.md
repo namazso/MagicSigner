@@ -21,6 +21,10 @@ Just place XmlLite.dll next to signtool.exe
 
 You can also just set the clock on your computer back. However that needs admin privileges, and has the tendency to break other apps, because it invalidates all the certificates TLS connections (like HTTPS) uses for the time.
 
+## How to defend against this
+
+Simply apply the [Microsoft vulnerable driver blocklist](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules) which contains all the known leaked certificates.
+
 ## License
 
     BSD Zero Clause License
